@@ -38,7 +38,21 @@ class Jscrambler
     JSON.parse(request.execute)
   end
 
-  def get_information
+  def get_information(project_id)
+    action = "/code/#{project_id}.json"
+
+    query_params = {}
+    #add default params
+    query_params['timestamp']  = Time.now.utc.iso8601.to_s
+    query_params['access_key'] = @access_key
+    query_params['signature'] = generate_signature('GET', action, query_params)
+
+    request = RestClient::Request.new(
+                                      :method => :get,
+                                      :url => "#{API_URL}#{action}?#{query_string(query_params)}"
+                                     )
+
+    JSON.parse(request.execute)
   end
 
   def download_code

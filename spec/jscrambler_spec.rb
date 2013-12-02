@@ -10,21 +10,40 @@ describe Jscrambler do
       sleep(5)
     end
 
-    it "should response with project id" do
-      expect(@created['id']).not_to eq(nil)
-    end
-
     after(:each) do
       Jscrambler.new(ACCESS_KEY, SECRET_KEY).delete_code(@created['id'])
+    end
+
+    it "should response with project id" do
+      expect(@created['id']).not_to eq(nil)
     end
     
   end
 
   describe "get_information" do
-    it "should response 200"
-    it "should response with project id"
-    it "should response with error id"
-    it "should response with error message"
+    before(:each) do
+      @created = Jscrambler.new(ACCESS_KEY, SECRET_KEY).upload_code(['spec/sample/sample.js'],{})
+      sleep(5)
+    end
+
+    after(:each) do
+      Jscrambler.new(ACCESS_KEY, SECRET_KEY).delete_code(@created['id'])
+    end
+
+    it "should response with project id" do
+      response = Jscrambler.new(ACCESS_KEY, SECRET_KEY).get_information(@created['id'])
+      expect(response['id']).not_to eq(nil)
+    end
+
+    it "should response with error id" do
+      response = Jscrambler.new(ACCESS_KEY, SECRET_KEY).get_information(@created['id'])
+      expect(response['error_id']).to eq(0.to_s)
+    end
+
+    it "should response with error message" do
+      response = Jscrambler.new(ACCESS_KEY, SECRET_KEY).get_information(@created['id'])
+      expect(response['error_message']).to eq("OK")
+    end
   end
 
   describe "download_code" do
