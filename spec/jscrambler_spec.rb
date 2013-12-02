@@ -47,8 +47,20 @@ describe Jscrambler do
   end
 
   describe "download_code" do
-    it "should response 200"
-    it "should zip file"
+    
+    before(:each) do
+      @created = Jscrambler.new(ACCESS_KEY, SECRET_KEY).upload_code(['spec/sample/sample.js'],{})
+      sleep(5)
+    end
+    
+    after(:each) do
+      Jscrambler.new(ACCESS_KEY, SECRET_KEY).delete_code(@created['id'])
+    end
+    
+    it "should response zip file" do
+      response = Jscrambler.new(ACCESS_KEY, SECRET_KEY).download_code(@created['id'])
+      expect(response).not_to eq(nil)
+    end
     
   end
 
